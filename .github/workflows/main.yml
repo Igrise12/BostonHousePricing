@@ -1,0 +1,84 @@
+name: CI (lint, test, build)
+
+on:
+  push:
+    branches: [main, develop, "feature/**"]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  python-ci:
+    name: Lint & Test (Python)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # tooling untuk CI
+          pip install ruff black isort pytest
+
+      - name: Ruff (lint)
+        run: ruff check .
+
+      - name: Black (format check)
+        run: black --check .
+
+      - name: isort (imports order)
+        run: isort --profile black --check-only .
+
+      # Hanya jalan kalau ada folder tests/ berisi file .py
+      - name: Pytest
+        if: ${{ hashFiles('tests/**/*.py') != '' }}
+        run: |
+          pytest -q --maxfail=1 --disable-warnings --junitxml=report.xml
+
+      - name: Upload test report
+        if: ${{ hashFiles('tests/**/*.py') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-report-${{ matrix.python-version }}
+          path: report.xml
+
+  docker-build-check:
+    name: Docker Build (smoke check)
+    runs-on: ubuntu-latest
+    needs: python-ci
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Jika kamu punya Dockerfile di root; ini hanya build lokal untuk verifikasi, tanpa push
+      - name: Build image
+        run: |
+          docker build -t app-ci:latest .
+
+      # Optional: jalankan smoke test cepat kalau aplikasi Flask ada
+      - name: Smoke test container (optional)
+        if: ${{ false }} # ubah ke true kalau mau coba jalanin container sebentar
+        run: |
+          docker run -d --rm -p 8000:8000 --name app app-ci:latest
+          sleep 5
+          docker logs app
+          docker stop app

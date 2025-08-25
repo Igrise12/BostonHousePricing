@@ -1,1 +1,263 @@
-<h1> Hello World </h1>
+<!DOCTYPE html>
+<html >
+
+<head>
+  <meta charset="UTF-8">
+  <title>ML API</title>
+  <!-- (tetap dipertahankan) -->
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <!-- Tambah font bergaya pixel/JP -->
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+
+  <style>
+    /* Latar ala 90-an: warna pastel + pola tile */
+    html, body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 10% 10%, #fff7f0 0 6%, transparent 7%) 0 0 / 60px 60px,
+        radial-gradient(circle at 60% 30%, #fff0f7 0 6%, transparent 7%) 30px 30px / 60px 60px,
+        linear-gradient(90deg, #ffe9f0 0 50%, #f0f7ff 50% 100%);
+      font-family: 'DotGothic16', 'MS PGothic', 'Osaka', Tahoma, Geneva, sans-serif;
+      color: #111;
+      image-rendering: pixelated;
+      cursor: default;
+    }
+
+    /* Frame/box ala geocities */
+    .page-wrap {
+      max-width: 760px;
+      margin: 24px auto;
+      padding: 8px;
+      border: 6px double #cc0066;
+      background: #fffefc;
+      box-shadow: 0 0 0 4px #ffb6c1, 0 0 0 8px #66ccff, 6px 6px 0 8px rgba(0,0,0,0.15);
+    }
+
+    .banner {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .banner .jp {
+      font-size: 18px;
+      color: #cc0066;
+      letter-spacing: 1px;
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* Marquee ala 90-an */
+    .marquee-wrap {
+      border: 3px ridge #66ccff;
+      background: #fff;
+      margin: 8px 0 16px;
+    }
+    .marquee-text {
+      color: #003399;
+      font-weight: bold;
+      padding: 6px;
+      text-shadow: 1px 1px 0 #fff;
+    }
+
+    /* Kotak login jadul */
+    .login {
+      background: #fffdf8;
+      border: 4px groove #cc0066;
+      padding: 16px;
+    }
+
+    .login h1 {
+      font-size: 22px;
+      color: #003399;
+      text-align: center;
+      margin: 0 0 12px 0;
+      text-shadow: 1px 1px 0 #ffffff, 2px 2px 0 #99ccff;
+    }
+
+    /* Tabel form ala era tabel layout */
+    .form-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border: 3px double #003399;
+    }
+    .form-table th {
+      background: #ffedf4;
+      color: #99004d;
+      text-align: left;
+      padding: 8px;
+      font-weight: bold;
+      border-bottom: 2px solid #003399;
+    }
+    .form-table td {
+      padding: 8px;
+      border-bottom: 1px dotted #99c;
+    }
+
+    /* Input jadul: bevel, inset */
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 6px 8px;
+      border: 3px inset #c0c0c0;
+      background: #fff;
+      outline: none;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    input[type="text"]:focus {
+      border: 3px inset #99ccff;
+      background: #f0f8ff;
+    }
+
+    /* Tombol besar ala 90s */
+    .btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 16px;
+      border: 3px outset #c0c0c0;
+      background: linear-gradient(#ffe1ec, #ffb3ce);
+      color: #111;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:active {
+      border: 3px inset #c0c0c0;
+      background: linear-gradient(#ffb3ce, #ffe1ec);
+    }
+
+    /* HR jadul */
+    .hr90s {
+      border: none;
+      height: 8px;
+      background:
+        repeating-linear-gradient(90deg, #cc0066 0 10px, #66ccff 10px 20px, #ffd700 20px 30px);
+      margin: 16px 0;
+    }
+
+    /* Box hasil prediksi */
+    .result {
+      margin-top: 14px;
+      border: 3px ridge #ffd700;
+      background: #fffef3;
+      padding: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    /* Footer mini */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #555;
+      margin-top: 12px;
+    }
+
+    /* Kecilkan br spacing default */
+    form br { display: none; }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrap">
+    <div class="banner">
+      <img alt="★" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><text x='4' y='20' font-size='20'>★</text></svg>">
+      <span class="jp">ボストン住宅価格予測（レトロ90年代）</span>
+    </div>
+
+    <div class="marquee-wrap">
+      <marquee class="marquee-text" behavior="scroll" direction="left" scrollamount="4">
+        いらっしゃいませ～ ☆ レトロサイトへようこそ！ ☆ Boston House Price Prediction ☆
+      </marquee>
+    </div>
+
+    <div class="login">
+      <h1>Boston House Price Prediction</h1>
+
+      <!-- Main Input For Receiving Query to our ML -->
+      <form action="{{ url_for('predict')}}" method="post">
+        <table class="form-table">
+          <tr><th colspan="2">★ 输入値 / 入力 (にゅうりょく) ★</th></tr>
+        <div class="result">
+            {{prediction_text}}
+        </div>
+          <tr>
+            <td>CRIM</td>
+            <td><input type="text" name="CRIM" placeholder="CRIM" required="required" /></td>
+          </tr>
+          <tr>
+            <td>ZN</td>
+            <td><input type="text" name="ZN" placeholder="ZN" required="required" /></td>
+          </tr>
+          <tr>
+            <td>INDUS</td>
+            <td><input type="text" name="INDUS" placeholder="INDUS" required="required" /></td>
+          </tr>
+          <tr>
+            <td>CHAS</td>
+            <td><input type="text" name="CHAS" placeholder="CHAS" required="required" /></td>
+          </tr>
+          <tr>
+            <td>NOX</td>
+            <td><input type="text" name="NOX" placeholder="NOX" required="required" /></td>
+          </tr>
+          <tr>
+            <td>RM</td>
+            <td><input type="text" name="RM" placeholder="RM" required="required" /></td>
+          </tr>
+          <tr>
+            <td>AGE</td>
+            <td><input type="text" name="AGE" placeholder="AGE" required="required" /></td>
+          </tr>
+          <tr>
+            <td>DIS</td>
+            <td><input type="text" name="DIS" placeholder="DIS" required="required" /></td>
+          </tr>
+          <tr>
+            <td>RAD</td>
+            <td><input type="text" name="RAD" placeholder="RAD" required="required" /></td>
+          </tr>
+          <tr>
+            <td>TAX</td>
+            <td><input type="text" name="TAX" placeholder="TAX" required="required" /></td>
+          </tr>
+          <tr>
+            <td>PTRATIO</td>
+            <td><input type="text" name="PTRATIO" placeholder="PTRATIO" required="required" /></td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td><input type="text" name="B" placeholder="B" required="required" /></td>
+          </tr>
+          <tr>
+            <td>LSTAT</td>
+            <td><input type="text" name="LSTAT" placeholder="LSTAT" required="required" /></td>
+          </tr>
+          <tr>
+            <td colspan="2" style="text-align:center;">
+              <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+            </td>
+          </tr>
+        </table>
+      </form>
+
+      <hr class="hr90s">
+
+
+
+      <div class="footer">
+        © 1998–2003 Boston House Retro Lab ・ 令和レトロ風
+      </div>
+    </div>
+  </div>
+</body>
+</html>
